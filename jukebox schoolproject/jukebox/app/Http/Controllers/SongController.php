@@ -145,7 +145,7 @@ class SongController extends Controller
         if (file_exists(public_path($song->file_path))) {
             unlink(public_path($song->file_path));
         }
-        
+
         if (file_exists(public_path($song->image_path))) {
             unlink(public_path($song->image_path));
         }

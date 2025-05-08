@@ -19,7 +19,7 @@ class PlayController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Toon het formulier voor het maken van een nieuwe resource.
      */
     public function create()
     {
@@ -27,7 +27,7 @@ class PlayController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Sla een nieuw aangemaakte resource op.
      */
     public function store(Request $request)
     {
@@ -35,7 +35,7 @@ class PlayController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Toon de gespecificeerde resource.
      */
     public function show(string $id)
     {
@@ -43,7 +43,7 @@ class PlayController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Toon het formulier voor het bewerken van de gespecificeerde resource.
      */
     public function edit(string $id)
     {
@@ -51,7 +51,7 @@ class PlayController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update de gespecificeerde resource.
      */
     public function update(Request $request, string $id)
     {
@@ -59,7 +59,7 @@ class PlayController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijder de gespecificeerde resource.
      */
     public function destroy(string $id)
     {

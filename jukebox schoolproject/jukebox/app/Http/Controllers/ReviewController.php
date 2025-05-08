@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 class ReviewController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Toon een lijst van alle resources.
      */
     public function index()
     {
@@ -18,7 +18,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Toon het formulier voor het maken van een nieuwe resource.
      */
     public function create()
     {
@@ -26,7 +26,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Sla een nieuw aangemaakte resource op.
      */
     public function store(Request $request, Song $song): RedirectResponse
     {
@@ -45,7 +45,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Toon de gespecificeerde resource.
      */
     public function show(string $id)
     {
@@ -53,7 +53,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Toon het formulier voor het bewerken van de gespecificeerde resource.
      */
     public function edit(string $id)
     {
@@ -61,7 +61,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update de gespecificeerde resource.
      */
     public function update(Request $request, string $id)
     {
@@ -69,7 +69,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijder de gespecificeerde resource.
      */
     public function destroy(Review $review): RedirectResponse
     {

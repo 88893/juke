@@ -20,8 +20,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // Roep de SongSeeder aan om voorbeeldgegevens toe te voegen
+        // Roep de seeders aan om voorbeeldgegevens toe te voegen
         $this->call([
+            AdminUserSeeder::class,
             SongSeeder::class,
         ]);
     }

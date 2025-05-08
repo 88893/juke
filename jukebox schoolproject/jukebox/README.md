@@ -11,13 +11,13 @@
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   [Simple, fast routing engine](https://laravel.com/docs/routing).
+-   [Powerful dependency injection container](https://laravel.com/docs/container).
+-   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+-   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+-   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+-   [Robust background job processing](https://laravel.com/docs/queues).
+-   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
@@ -35,14 +35,14 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 
 ### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+-   **[Vehikl](https://vehikl.com/)**
+-   **[Tighten Co.](https://tighten.co)**
+-   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+-   **[64 Robots](https://64robots.com)**
+-   **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+-   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+-   **[Redberry](https://redberry.international/laravel-development/)**
+-   **[Active Logic](https://activelogic.com)**
 
 ## Contributing
 
@@ -59,3 +59,208 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Jukebox Project - The Hatchet
+
+## Over dit project
+
+Dit project is een digitale jukebox applicatie voor "The Hatchet", een moderne bar in het centrum van Rotterdam. De applicatie stelt bezoekers in staat om muziek te kiezen die in de bar wordt afgespeeld, reviews toe te voegen, en beheerders kunnen de muziekcollectie beheren.
+
+## Inhoudsopgave
+
+1. [Installatie](#installatie)
+2. [Functionaliteiten](#functionaliteiten)
+3. [Autorisatie](#autorisatie)
+4. [Beheerfunctionaliteiten](#beheerfunctionaliteiten)
+5. [Projectstructuur](#projectstructuur)
+6. [Routes](#routes)
+7. [Configuratie](#configuratie)
+
+## Installatie
+
+1. Clone de repository:
+    ```
+    git clone [repository-url]
+    ```
+2. Navigeer naar de projectmap:
+    ```
+    cd jukebox
+    ```
+3. Installeer de dependencies:
+    ```
+    composer install
+    npm install
+    ```
+4. Kopieer het .env.example bestand naar .env:
+    ```
+    cp .env.example .env
+    ```
+5. Genereer een applicatie sleutel:
+    ```
+    php artisan key:generate
+    ```
+6. Configureer de database verbinding in het .env bestand
+7. Voer de migraties uit:
+    ```
+    php artisan migrate
+    ```
+8. Vul de database met voorbeeldgegevens en maak een admin gebruiker aan:
+    ```
+    php artisan db:seed
+    ```
+    Of maak handmatig een admin gebruiker aan met Tinker:
+    ```
+    php artisan tinker
+    ```
+    ```php
+    $user = new \App\Models\User();
+    $user->name = 'Admin';
+    $user->email = 'admin@example.com';
+    $user->password = bcrypt('wachtwoord');
+    $user->is_admin = true;
+    $user->save();
+    ```
+9. Start de ontwikkelingsserver:
+    ```
+    php artisan serve
+    ```
+
+## Functionaliteiten
+
+-   **Publieke functionaliteiten:**
+
+    -   Bekijken van alle beschikbare liedjes
+    -   Afspelen van liedjes
+    -   Bekijken van statistieken
+    -   Toevoegen van reviews
+    -   Registreren als gebruiker
+
+-   **Geauthenticeerde gebruikers:**
+
+    -   Alle publieke functionaliteiten
+    -   Inloggen/uitloggen van het account
+
+-   **Beheerdersfunctionaliteiten (alleen voor admins):**
+    -   Toevoegen van nieuwe liedjes
+    -   Bewerken van bestaande liedjes
+    -   Verwijderen van liedjes
+    -   Verwijderen van reviews
+
+## Autorisatie
+
+Het project maakt gebruik van Laravel's authenticatiesysteem en een aangepaste middleware om gebruikersrechten te beheren:
+
+-   Niet-ingelogde gebruikers kunnen liedjes bekijken, afspelen en reviews toevoegen
+-   Geregistreerde gebruikers kunnen inloggen/uitloggen
+-   Alleen beheerders (admins) hebben rechten om:
+    -   Liedjes toe te voegen, te bewerken en te verwijderen
+    -   Reviews te verwijderen
+
+De autorisatie is geïmplementeerd met behulp van:
+
+-   `is_admin` veld in het User model
+-   AdminMiddleware die controleert of een gebruiker admin-rechten heeft
+-   Beveiligde routes voor admin-functionaliteiten
+-   Laravel's standaard authenticatiesysteem
+
+## Beheerfunctionaliteiten
+
+Als administrator kun je de volgende acties uitvoeren:
+
+1. **Liedjes beheren:**
+
+    - Nieuwe liedjes toevoegen via het formulier op `/songs/create`
+    - Bestaande liedjes bewerken via `/songs/{song}/edit`
+    - Liedjes verwijderen via de knop op de indexview
+
+2. **Reviews beheren:**
+    - Reviews verwijderen via de knop op de liedjesdetailpagina
+
+## Projectstructuur
+
+```
+jukebox/
+├── app/                    # Applicatielogica
+│   ├── Http/
+│   │   ├── Controllers/   # Controllers
+│   │   │   └── Auth/      # Authenticatie controllers
+│   │   ├── Middleware/    # Middleware voor autorisatie
+│   │   └── ...
+│   ├── Models/            # Database models
+│   └── ...
+├── database/
+│   ├── migrations/        # Database migraties
+│   └── ...
+├── public/
+│   ├── music/             # Muziekbestanden
+│   ├── images/            # Afbeeldingen
+│   └── ...
+├── resources/
+│   ├── views/             # Blade templates
+│   │   ├── auth/          # Authenticatie views
+│   │   ├── layouts/       # Layout templates
+│   │   ├── songs/         # Song views
+│   │   └── ...
+│   └── ...
+├── routes/                # Route definities
+└── ...
+```
+
+## Routes
+
+-   **Authenticatie routes:**
+
+    -   `GET /login` - Toon inlogformulier
+    -   `POST /login` - Verwerk inlogverzoek
+    -   `POST /logout` - Log gebruiker uit
+    -   `GET /register` - Toon registratieformulier
+    -   `POST /register` - Verwerk registratieverzoek
+
+-   **Publieke routes:**
+
+    -   `GET /songs` - Toon alle liedjes
+    -   `GET /songs/{song}` - Toon een specifiek liedje
+    -   `GET /statistics` - Toon statistieken
+    -   `POST /songs/{song}/reviews` - Voeg een review toe
+
+-   **Admin routes (beschermd met middleware):**
+    -   `GET /songs/create` - Toon formulier voor nieuw liedje
+    -   `POST /songs` - Voeg nieuw liedje toe
+    -   `GET /songs/{song}/edit` - Toon formulier voor bewerken
+    -   `PUT /songs/{song}` - Update liedje
+    -   `DELETE /songs/{song}` - Verwijder liedje
+    -   `DELETE /reviews/{review}` - Verwijder review
+
+## Configuratie
+
+### Admin gebruikers aanmaken
+
+Admin gebruikers kunnen worden aangemaakt via Tinker (zie installatiestappen) of via een seeder:
+
+```php
+// database/seeders/AdminUserSeeder.php
+public function run()
+{
+    \App\Models\User::create([
+        'name' => 'Admin',
+        'email' => 'admin@example.com',
+        'password' => bcrypt('wachtwoord'),
+        'is_admin' => true,
+    ]);
+}
+```
+
+### Inloggegevens demo-admin
+
+Bij het seeden van de database wordt een admin gebruiker aangemaakt met de volgende gegevens:
+
+-   **Email:** admin@example.com
+-   **Wachtwoord:** wachtwoord
+
+### Laatste wijzigingen
+
+-   Toegevoegde admin autorisatie voor liedjesbeheer
+-   Toegevoegde admin autorisatie voor reviews verwijderen
+-   Toegevoegde gebruikersauthenticatie (inloggen, registreren, uitloggen)
+-   Alle commentaar vertaald naar het Nederlands
+-   README bijgewerkt met instructies voor autorisatie en authenticatie

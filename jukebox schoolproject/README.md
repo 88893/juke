@@ -11,8 +11,9 @@ Dit project is een digitale jukebox applicatie voor "The Hatchet", een moderne b
 3. [Ontwikkelingsproces](#ontwikkelingsproces)
 4. [Projectstructuur](#projectstructuur)
 5. [Functionaliteiten](#functionaliteiten)
-6. [Juridische overwegingen](#juridische-overwegingen)
-7. [Voortgangsrapportage](#voortgangsrapportage)
+6. [Authenticatie en Autorisatie](#authenticatie-en-autorisatie)
+7. [Juridische overwegingen](#juridische-overwegingen)
+8. [Voortgangsrapportage](#voortgangsrapportage)
 
 ## Projectbeschrijving
 
@@ -50,6 +51,9 @@ De eigenaar van "The Hatchet", Marien, heeft gevraagd om een digitale jukebox ap
    ```
    php artisan db:seed
    ```
+   Dit zal ook een admin gebruiker aanmaken met:
+   - Email: admin@example.com
+   - Wachtwoord: wachtwoord
 9. Start de ontwikkelingsserver:
    ```
    php artisan serve
@@ -69,10 +73,11 @@ De eigenaar van "The Hatchet", Marien, heeft gevraagd om een digitale jukebox ap
   - 'songs' tabel voor het opslaan van liedjes
   - 'reviews' tabel voor het opslaan van beoordelingen
   - 'plays' tabel voor het bijhouden van het aantal keer dat een liedje is afgespeeld
+  - 'users' tabel voor gebruikersbeheer en authenticatie
 
 ### Stap 3: Models en Relaties
 
-- Model classes gemaakt voor Song, Review en Play
+- Model classes gemaakt voor Song, Review, Play en User
 - Relaties tussen de models gedefinieerd
 
 ### Stap 4: Controllers
@@ -80,6 +85,7 @@ De eigenaar van "The Hatchet", Marien, heeft gevraagd om een digitale jukebox ap
 - SongController aangemaakt voor het beheren van liedjes
 - ReviewController aangemaakt voor het beheren van beoordelingen
 - PlayController aangemaakt voor het bijhouden van afgespeelde liedjes
+- Auth controllers aangemaakt voor authenticatie
 
 ### Stap 5: Views
 
@@ -88,6 +94,7 @@ De eigenaar van "The Hatchet", Marien, heeft gevraagd om een digitale jukebox ap
   - Detailpagina voor het afspelen van een liedje
   - Formulier voor het toevoegen van beoordelingen
   - Statistiekenpagina voor het tonen van afspeelgegevens
+  - Login en registratiepagina's
 
 ### Stap 6: Muziek en Afbeeldingen
 
@@ -95,9 +102,11 @@ De eigenaar van "The Hatchet", Marien, heeft gevraagd om een digitale jukebox ap
 - Map aangemaakt voor het opslaan van afbeeldingen
 - Minimaal 5 liedjes toegevoegd aan de applicatie
 
-### Stap 7: Beheerfunctionaliteit
+### Stap 7: Authenticatie en Autorisatie
 
-- Beheerpagina's gemaakt voor het toevoegen van nieuwe liedjes
+- Authenticatie systeem opgezet (login, registratie, logout)
+- Admin autorisatie toegevoegd om toegang te beperken tot beheerfuncties
+- Onderscheid gemaakt tussen reguliere gebruikers en beheerders
 
 ### Stap 8: Responsief Ontwerp
 
@@ -116,6 +125,8 @@ jukebox/
 ├── app/                    # Applicatielogica
 │   ├── Http/              # HTTP-gerelateerde code
 │   │   ├── Controllers/   # Controllers
+│   │   │   └── Auth/      # Authenticatie controllers
+│   │   ├── Middleware/    # Middleware voor autorisatie
 │   ├── Models/            # Database models
 ├── database/              # Database-gerelateerde bestanden
 │   ├── migrations/        # Database migraties
@@ -127,6 +138,8 @@ jukebox/
 │   ├── images/            # Afbeeldingen
 ├── resources/             # Onbewerkte bronbestanden
 │   ├── views/             # Blade templates
+│   │   ├── auth/          # Authenticatie views
+│   │   ├── songs/         # Song views
 ├── routes/                # Route definities
 └── tests/                 # Automatische tests
 ```
@@ -137,8 +150,41 @@ jukebox/
 - Afspelen van gekozen liedjes
 - Bijhouden van afspeelstatistieken per liedje
 - Mogelijkheid om reviews te schrijven over liedjes
-- Beheerinterface voor het toevoegen van nieuwe liedjes (wens)
-- Mobiele interface voor bezoekers (wens)
+- Gebruikersregistratie en authenticatie
+- Beheerinterface voor het toevoegen, bewerken en verwijderen van liedjes (alleen voor admins)
+- Mogelijkheid voor admins om reviews te verwijderen
+
+## Authenticatie en Autorisatie
+
+Het project maakt gebruik van Laravel's authenticatiesysteem en een aangepaste middleware om gebruikersrechten te beheren:
+
+### Gebruikersrollen
+
+- **Bezoekers (niet ingelogd):**
+
+  - Kunnen liedjes bekijken en afspelen
+  - Kunnen reviews toevoegen
+  - Kunnen een account aanmaken
+
+- **Geauthenticeerde gebruikers:**
+
+  - Hebben alle rechten van bezoekers
+  - Kunnen inloggen en uitloggen
+
+- **Beheerders (admins):**
+  - Hebben alle rechten van geauthenticeerde gebruikers
+  - Kunnen liedjes toevoegen, bewerken en verwijderen
+  - Kunnen reviews verwijderen
+
+### Implementatie
+
+De autorisatie is geïmplementeerd met behulp van:
+
+- `is_admin` veld in het User model om beheerders te identificeren
+- AdminMiddleware voor het beveiligen van admin-routes
+- Auth middleware voor gebruikersauthenticatie
+- Blade directieven (@auth, @guest) om UI-elementen conditioneel weer te geven
+- Laravel's ingebouwde authenticatiefuncties
 
 ## Juridische overwegingen
 
@@ -166,7 +212,9 @@ Om problemen met aanstootgevende teksten te voorkomen, zijn de volgende maatrege
 - Gebruiksvriendelijke interface voor het afspelen van muziek
 - Statistiekenmodule voor het bijhouden van populariteit
 - Reviewsysteem voor bezoekers
+- Gebruikersregistratie en authenticatie
 - Beheerinterface voor eigenaar
+- Admin autorisatie voor veilige toegangscontrole
 
 ### Uitdagingen tijdens de ontwikkeling
 
@@ -174,6 +222,8 @@ Om problemen met aanstootgevende teksten te voorkomen, zijn de volgende maatrege
 - Het opzetten van een intuïtieve gebruikersinterface
 - Het waarborgen van de toegankelijkheid op zowel desktop als mobiel
 - Het correct implementeren van de relaties tussen de models
+- Het implementeren van een veilig autorisatiesysteem
+- Het opzetten van het gebruikersauthenticatiesysteem
 
 ### Leermomenten
 
@@ -181,6 +231,8 @@ Om problemen met aanstootgevende teksten te voorkomen, zijn de volgende maatrege
 - Ervaring opgedaan met het werken met multimedia in web applicaties
 - Verbeterd inzicht in het ontwikkelen van gebruiksvriendelijke interfaces
 - Kennis vergaard over juridische aspecten van muziek in openbare gelegenheden
+- Ervaring met het implementeren van autorisatie in web applicaties
+- Ervaring met het opzetten van een gebruikersauthenticatiesysteem
 
 ### Toekomstige verbeteringen
 
@@ -189,3 +241,4 @@ Om problemen met aanstootgevende teksten te voorkomen, zijn de volgende maatrege
 - Integratie met populaire streamingdiensten
 - Uitbreiding van de beheermodule met geavanceerde statistieken
 - Toevoegen van een betalingssysteem voor premium liedjes
+- Verbeterde gebruikersprofielen en wachtwoord reset functionaliteit
